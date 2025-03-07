@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
+import { logUserAction } from "@/services/mockBackendService";
 
 interface AuthFormProps {
   type: "login" | "register";
@@ -28,6 +29,14 @@ const AuthForm = ({ type }: AuthFormProps) => {
     try {
       // Simulate API call with timeout
       await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Log the user action which will trigger admin notifications
+      logUserAction({
+        userEmail: email,
+        timestamp: new Date().toISOString(),
+        action: type === "login" ? "login" : "register",
+        ipAddress: "127.0.0.1" // In a real app, this would be captured server-side
+      });
 
       // For demo purposes, we'll just navigate to dashboard
       // In a real app, you would integrate with an auth provider
