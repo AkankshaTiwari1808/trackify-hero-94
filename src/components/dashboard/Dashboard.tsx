@@ -14,45 +14,29 @@ import Analytics from "./Analytics";
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-// Sample tasks
-const sampleTasks: Task[] = [
-  {
-    id: generateId(),
-    title: "Complete project proposal",
-    category: "Work",
-    timeSpent: 5400, // 1h 30m
-    isRunning: false,
-  },
-  {
-    id: generateId(),
-    title: "Study React hooks",
-    category: "Study",
-    timeSpent: 3600, // 1h
-    isRunning: false,
-  },
-  {
-    id: generateId(),
-    title: "Morning workout",
-    category: "Fitness",
-    timeSpent: 1800, // 30m
-    isRunning: false,
-  },
-];
-
 const Dashboard = () => {
-  const [tasks, setTasks] = useState<Task[]>(sampleTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [openNewTaskDialog, setOpenNewTaskDialog] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newTaskCategory, setNewTaskCategory] = useState("Work");
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  
+  // Statistics for the time tracking tab
+  const [totalToday, setTotalToday] = useState(0);
+  const [totalWeek, setTotalWeek] = useState(0);
+  const [totalMonth, setTotalMonth] = useState(0);
 
-  // Check for running tasks on component mount
+  // Update statistics when tasks change
   useEffect(() => {
-    const runningTask = tasks.find(task => task.isRunning);
-    if (runningTask) {
-      setActiveTask(runningTask);
-    }
-  }, []);
+    // Calculate total time spent today
+    const totalTodaySeconds = tasks.reduce((total, task) => total + task.timeSpent, 0);
+    setTotalToday(totalTodaySeconds);
+    
+    // In a real app, we would filter tasks by date range
+    // For now, we'll just show placeholder data based on actual task time
+    setTotalWeek(totalTodaySeconds > 0 ? totalTodaySeconds * 1.5 : 0);
+    setTotalMonth(totalTodaySeconds > 0 ? totalTodaySeconds * 4 : 0);
+  }, [tasks]);
 
   // Timer update function
   useEffect(() => {
@@ -134,6 +118,12 @@ const Dashboard = () => {
       });
       return updatedTasks;
     });
+  };
+
+  const formatTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours}h ${minutes}m`;
   };
 
   return (
@@ -248,35 +238,49 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="glass-card p-6 rounded-xl flex flex-col items-center">
                 <h3 className="text-lg font-semibold mb-2">Today</h3>
-                <div className="text-3xl font-bold text-primary">5h 42m</div>
+                <div className="text-3xl font-bold text-primary">
+                  {formatTime(totalToday)}
+                </div>
               </div>
               <div className="glass-card p-6 rounded-xl flex flex-col items-center">
                 <h3 className="text-lg font-semibold mb-2">This Week</h3>
-                <div className="text-3xl font-bold text-primary">24h 18m</div>
+                <div className="text-3xl font-bold text-primary">
+                  {formatTime(totalWeek)}
+                </div>
               </div>
               <div className="glass-card p-6 rounded-xl flex flex-col items-center">
                 <h3 className="text-lg font-semibold mb-2">This Month</h3>
-                <div className="text-3xl font-bold text-primary">87h 30m</div>
+                <div className="text-3xl font-bold text-primary">
+                  {formatTime(totalMonth)}
+                </div>
               </div>
             </div>
             
-            <div className="bg-muted/30 rounded-xl p-6 mt-6">
-              <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
-              <div className="space-y-4">
-                {tasks.map((task) => (
-                  <div key={task.id} className="flex justify-between items-center p-3 bg-background rounded-lg border">
-                    <div>
-                      <div className="font-medium">{task.title}</div>
-                      <div className="text-sm text-muted-foreground">{task.category}</div>
+            {tasks.length > 0 ? (
+              <div className="bg-muted/30 rounded-xl p-6 mt-6">
+                <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
+                <div className="space-y-4">
+                  {tasks.map((task) => (
+                    <div key={task.id} className="flex justify-between items-center p-3 bg-background rounded-lg border">
+                      <div>
+                        <div className="font-medium">{task.title}</div>
+                        <div className="text-sm text-muted-foreground">{task.category}</div>
+                      </div>
+                      <div className="font-mono">
+                        {Math.floor(task.timeSpent / 3600)}h{" "}
+                        {Math.floor((task.timeSpent % 3600) / 60)}m
+                      </div>
                     </div>
-                    <div className="font-mono">
-                      {Math.floor(task.timeSpent / 3600)}h{" "}
-                      {Math.floor((task.timeSpent % 3600) / 60)}m
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="text-center py-12 bg-muted/30 rounded-xl">
+                <p className="text-muted-foreground mb-4">
+                  No activity data yet. Add tasks and start tracking time to see your statistics.
+                </p>
+              </div>
+            )}
           </div>
         </TabsContent>
 
