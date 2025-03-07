@@ -1,11 +1,11 @@
 
 import { useState } from "react";
-import Hero from "@/components/Hero";
-import Features from "@/components/Features";
-import Footer from "@/components/Footer";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import AuthForm from "@/components/auth/AuthForm";
+import Footer from "@/components/Footer";
 
-const Index = () => {
+const Login = () => {
   const [darkMode, setDarkMode] = useState(false);
 
   const toggleDarkMode = () => {
@@ -17,9 +17,8 @@ const Index = () => {
     <div className={darkMode ? "dark" : ""}>
       <div className="min-h-screen flex flex-col">
         <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-        <main className="flex-1 pt-16">
-          <Hero />
-          <Features />
+        <main className="flex-1 flex items-center justify-center p-4 pt-24 md:pt-32">
+          <AuthForm type="login" />
         </main>
         <Footer />
       </div>
@@ -27,4 +26,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Login;
