@@ -58,10 +58,7 @@ const notifyAdmins = (entry: LogEntry): void => {
   // 2. Create a secure endpoint that sends emails when users login/register
   // 3. Call that endpoint from your frontend or have it triggered by database events
   
-  // Simulate sending an email by showing an alert (for demo purposes only)
-  setTimeout(() => {
-    alert(`DEMO: Notification email about user ${entry.userEmail} ${entry.action} would be sent to admin emails: ${ADMIN_EMAILS.join(', ')}`);
-  }, 1000);
+  // Removed the alert popup
 };
 
 export const getUserLogs = (): LogEntry[] => {

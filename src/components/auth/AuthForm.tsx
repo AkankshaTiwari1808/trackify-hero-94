@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -23,12 +24,18 @@ const AuthForm = ({ type }: AuthFormProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Check if user is already logged in
+    const userEmail = localStorage.getItem('userEmail');
+    if (userEmail && isUserRegistered(userEmail)) {
+      navigate('/dashboard');
+    }
+    
     if (email && type === "register") {
       setAlreadyRegistered(isUserRegistered(email));
     } else {
       setAlreadyRegistered(false);
     }
-  }, [email, type]);
+  }, [email, type, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +59,9 @@ const AuthForm = ({ type }: AuthFormProps) => {
         }
       }
 
+      // Save user email to localStorage to maintain authentication state
+      localStorage.setItem('userEmail', email);
+
       logUserAction({
         userEmail: email,
         timestamp: new Date().toISOString(),
@@ -67,6 +77,35 @@ const AuthForm = ({ type }: AuthFormProps) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    setIsLoading(true);
+    
+    // Simulate Google authentication
+    setTimeout(() => {
+      const mockGoogleEmail = "google.user@example.com";
+      
+      // Register the user if not already registered
+      if (!isUserRegistered(mockGoogleEmail)) {
+        registerUser(mockGoogleEmail);
+      }
+      
+      // Save authentication state
+      localStorage.setItem('userEmail', mockGoogleEmail);
+      
+      // Log the login action
+      logUserAction({
+        userEmail: mockGoogleEmail,
+        timestamp: new Date().toISOString(),
+        action: "login",
+        ipAddress: "127.0.0.1"
+      });
+      
+      toast.success("Successfully logged in with Google");
+      navigate("/dashboard");
+      setIsLoading(false);
+    }, 1500);
   };
 
   return (
@@ -193,7 +232,7 @@ const AuthForm = ({ type }: AuthFormProps) => {
               </svg>
               Github
             </Button>
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={isLoading}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

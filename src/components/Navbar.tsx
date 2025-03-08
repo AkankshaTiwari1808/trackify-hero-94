@@ -1,9 +1,10 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Clock, Moon, Sun } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { isUserRegistered } from "@/services/mockBackendService";
 
 interface NavbarProps {
   darkMode: boolean;
@@ -12,8 +13,16 @@ interface NavbarProps {
 
 const Navbar = ({ darkMode, toggleDarkMode }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const location = useLocation();
-  const isAuthenticated = false; // Replace with auth state
+  
+  // Check authentication state from localStorage
+  useEffect(() => {
+    const userEmail = localStorage.getItem('userEmail');
+    if (userEmail && isUserRegistered(userEmail)) {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   return (
     <header className="fixed w-full top-0 z-50 bg-background/80 backdrop-blur-sm border-b">
