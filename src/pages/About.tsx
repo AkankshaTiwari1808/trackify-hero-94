@@ -27,49 +27,52 @@ const About = () => {
                   About Trackify
                 </h1>
                 <p className="max-w-[700px] text-muted-foreground md:text-xl">
-                  We're on a mission to help people make the most of their time.
+                  A project by friends, for everyone who values their time.
                 </p>
               </div>
 
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                <Card className="bg-white/70 backdrop-blur-sm border-secondary/20 hover:shadow-lg transition-all">
+                <Card className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-secondary/20 hover:shadow-lg transition-all">
                   <CardContent className="p-6">
                     <h3 className="text-xl font-semibold mb-2">Our Mission</h3>
                     <p className="text-muted-foreground">
-                      At Trackify, we believe that time is our most valuable resource. Our mission is to help people track, analyze, and optimize how they spend their time.
+                      Trackify is being built with the belief that time is our most valuable resource. Our mission is to create intuitive tools that help people understand how they spend their time.
                     </p>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white/70 backdrop-blur-sm border-secondary/20 hover:shadow-lg transition-all">
+                <Card className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-secondary/20 hover:shadow-lg transition-all">
                   <CardContent className="p-6">
                     <h3 className="text-xl font-semibold mb-2">Our Team</h3>
                     <p className="text-muted-foreground">
-                      We're a passionate team of productivity enthusiasts, developers, and designers who are committed to creating tools that help people achieve more with their time.
+                      Founded by two friends, Akanksha and Anchal, who are passionate about productivity and technology. We're building Trackify as a side project with big ambitions.
                     </p>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-white/70 backdrop-blur-sm border-secondary/20 hover:shadow-lg transition-all">
+                <Card className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border-secondary/20 hover:shadow-lg transition-all">
                   <CardContent className="p-6">
                     <h3 className="text-xl font-semibold mb-2">Our Values</h3>
                     <p className="text-muted-foreground">
-                      Simplicity, effectiveness, and respect for your time guide everything we do. We build tools we would want to use ourselves.
+                      Simplicity, effectiveness, and respect for your time guide everything we create. We're building tools we want to use ourselves.
                     </p>
                   </CardContent>
                 </Card>
               </div>
 
-              <div className="mt-16 p-8 bg-white/70 backdrop-blur-sm rounded-xl border border-secondary/20">
-                <h2 className="text-2xl font-bold mb-4">Our Story</h2>
+              <div className="mt-16 p-8 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-xl border border-secondary/20">
+                <h2 className="text-2xl font-bold mb-4">Our Journey</h2>
                 <p className="mb-4">
-                  Trackify began in 2023 when our founder realized how much time was being wasted on tasks that weren't aligned with their goals. After trying numerous productivity apps and finding them either too complex or too simple, the idea for Trackify was born.
+                  Trackify began as a collaboration between Akanksha and Anchal in 2023. As friends with shared interests in productivity and web development, we noticed how difficult it was to find a time tracking tool that balanced simplicity with powerful insights.
                 </p>
                 <p className="mb-4">
-                  We launched with a simple mission: create a time tracking tool that's intuitive enough for anyone to use, but powerful enough to provide meaningful insights that help people optimize their time.
+                  This website is currently under active development, with many exciting features and improvements planned. We're building it step by step, learning and adapting as we go.
+                </p>
+                <p className="mb-4">
+                  Akanksha brings her expertise in user experience and front-end development, while Anchal contributes strong backend development skills and data analysis knowledge. Together, we're creating something we believe will help people make better use of their time.
                 </p>
                 <p>
-                  Today, Trackify is helping thousands of people around the world make better use of their time, stay focused on what matters, and achieve their goals faster.
+                  Thank you for your interest in Trackify! We welcome feedback as we continue to improve and expand the platform.
                 </p>
               </div>
             </div>
