@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
-import { logUserAction } from "@/services/mockBackendService";
+import { logUserAction, isUserRegistered, registerUser } from "@/services/mockBackendService";
 
 interface AuthFormProps {
   type: "login" | "register";
@@ -20,26 +19,46 @@ const AuthForm = ({ type }: AuthFormProps) => {
   const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (email && type === "register") {
+      setAlreadyRegistered(isUserRegistered(email));
+    } else {
+      setAlreadyRegistered(false);
+    }
+  }, [email, type]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // Simulate API call with timeout
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Log the user action which will trigger admin notifications
+      if (type === "register") {
+        if (isUserRegistered(email)) {
+          toast.error("Email already registered. Please log in instead.");
+          navigate("/login");
+          return;
+        }
+        registerUser(email);
+      } else {
+        if (!isUserRegistered(email)) {
+          toast.error("Account not found. Please register first.");
+          navigate("/register");
+          return;
+        }
+      }
+
       logUserAction({
         userEmail: email,
         timestamp: new Date().toISOString(),
         action: type === "login" ? "login" : "register",
-        ipAddress: "127.0.0.1" // In a real app, this would be captured server-side
+        ipAddress: "127.0.0.1"
       });
 
-      // For demo purposes, we'll just navigate to dashboard
-      // In a real app, you would integrate with an auth provider
       toast.success(type === "login" ? "Welcome back!" : "Account created successfully!");
       navigate("/dashboard");
     } catch (error) {
@@ -86,6 +105,14 @@ const AuthForm = ({ type }: AuthFormProps) => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {alreadyRegistered && (
+              <p className="text-sm text-orange-500 mt-1">
+                This email is already registered. 
+                <Link to="/login" className="underline ml-1 font-medium">
+                  Log in instead?
+                </Link>
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">

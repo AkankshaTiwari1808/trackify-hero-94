@@ -16,12 +16,26 @@ type LogEntry = {
 
 // In-memory storage for this demo (would be a database in real implementation)
 const userLogs: LogEntry[] = [];
+const registeredUsers: Set<string> = new Set();
+
+export const isUserRegistered = (email: string): boolean => {
+  return registeredUsers.has(email);
+};
+
+export const registerUser = (email: string): void => {
+  registeredUsers.add(email);
+};
 
 export const logUserAction = (entry: LogEntry): void => {
   userLogs.push({
     ...entry,
     timestamp: new Date().toISOString()
   });
+  
+  // If this is a register action, add the user to registered users
+  if (entry.action === 'register') {
+    registerUser(entry.userEmail);
+  }
   
   console.log(`Action logged: ${entry.action} by ${entry.userEmail} at ${entry.timestamp}`);
   
@@ -33,21 +47,29 @@ export const logUserAction = (entry: LogEntry): void => {
 };
 
 const notifyAdmins = (entry: LogEntry): void => {
-  // In a real implementation, this would send actual emails
+  // In a real implementation, this would send actual emails using a service like SendGrid, Mailgun, etc.
   // For demo purposes, we'll just log to console
   console.log(`[NOTIFICATION] Email would be sent to ${ADMIN_EMAILS.join(', ')}`);
   console.log(`Subject: New user ${entry.action} - Trackify`);
   console.log(`Body: User ${entry.userEmail} has ${entry.action}ed at ${new Date(entry.timestamp).toLocaleString()}`);
   
+  // IMPORTANT NOTE: In a real application, you would:
+  // 1. Set up a backend API with an email service provider (SendGrid, AWS SES, etc.)
+  // 2. Create a secure endpoint that sends emails when users login/register
+  // 3. Call that endpoint from your frontend or have it triggered by database events
+  
   // Simulate sending an email by showing an alert (for demo purposes only)
-  // This will at least show the user that the notification system is working
   setTimeout(() => {
-    alert(`DEMO: Notification email about user ${entry.userEmail} ${entry.action} would be sent to admin emails.`);
+    alert(`DEMO: Notification email about user ${entry.userEmail} ${entry.action} would be sent to admin emails: ${ADMIN_EMAILS.join(', ')}`);
   }, 1000);
 };
 
 export const getUserLogs = (): LogEntry[] => {
   return [...userLogs]; // Return a copy to prevent direct manipulation
+};
+
+export const getRegisteredUsersCount = (): number => {
+  return registeredUsers.size;
 };
 
 // This would normally be in a separate admin service
